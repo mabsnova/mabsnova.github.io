@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NEA Interview Survey</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d0d1a;
+    --card: rgba(255,255,255,0.05);
+    --border: rgba(255,255,255,0.12);
+    --text: #e8e8f0;
+    --muted: #9090aa;
+    --accent1: #5b8dee;
+    --accent2: #a855f7;
+    --accent3: #f59e0b;
+    --grad: linear-gradient(135deg, #5b8dee, #a855f7);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* animated background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 20% 20%, rgba(91,141,238,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 60% at 80% 80%, rgba(168,85,247,0.10) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  header {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 36px 24px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(22px, 5vw, 32px);
+    background: var(--grad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 6px;
+  }
+
+  header p {
+    color: var(--muted);
+    font-size: 13px;
+    font-style: italic;
+  }
+
+  nav {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 18px;
+  }
+
+  .nav-btn {
+    padding: 7px 22px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .nav-btn.active, .nav-btn:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(255,255,255,0.35);
+    color: #fff;
+  }
+
+  main {
+    flex: 1;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    padding: 36px 16px 60px;
+  }
+
+  .card {
+    background: var(--card);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 36px 32px;
+    width: 100%;
+    max-width: 640px;
+    box-shadow: 0 12px 48px rgba(0,0,0,0.5);
+    animation: fadeUp 0.4s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: #fff;
+    padding: 4px 13px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    margin-bottom: 14px;
+    color: #fff;
+  }
+
+  .intro {
+    color: #bbbbd0;
+    line-height: 1.75;
+    font-size: 15px;
+    margin-bottom: 22px;
+  }
+
+  label.field-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 7px;
+  }
+
+  input[type="text"], input[type="password"], textarea {
+    width: 100%;
+    padding: 11px 15px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 9px;
+    color: #fff;
+    font-size: 15px;
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+    margin-bottom: 20px;
+  }
+
+  input:focus, textarea:focus {
+    border-color: var(--accent1);
+  }
+
+  textarea { resize: vertical; line-height: 1.6; }
+
+  .role-row { display: flex; gap: 12px; margin-bottom: 26px; }
+
+  .role-btn {
+    flex: 1;
+    padding: 11px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 9px;
+    color: #aaa;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+
+  .role-btn.selected {
+    background: rgba(91,141,238,0.2);
+    border-color: var(--accent1);
+    color: #fff;
+  }
+
+  .btn-primary {
+    padding: 13px 30px;
+    background: var(--grad);
+    border: none;
+    border-radius: 9px;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    letter-spacing: 0.2px;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+
+  .btn-primary:hover { opacity: 0.9; }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .btn-secondary {
+    padding: 13px 22px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 9px;
+    color: #bbb;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .btn-secondary:hover { background: rgba(255,255,255,0.13); }
+
+  .btn-row { display: flex; gap: 12px; justify-content: flex-end; margin-top: 14px; }
+
+  .section-header {
+    border-bottom: 2px solid;
+    padding-bottom: 8px;
+    margin-bottom: 22px;
+    font-family: 'Playfair Display', serif;
+    font-size: 19px;
+  }
+
+  .q-block { margin-bottom: 24px; }
+  .q-text { font-size: 15px; color: #ddd; line-height: 1.55; margin-bottom: 9px; }
+
+  .error { color: #ff8a8a; font-size: 13px; margin-bottom: 12px; }
+
+  .response-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    padding: 18px 20px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .response-card:hover { background: rgba(255,255,255,0.09); }
+
+  .response-top { display: flex; justify-content: space-between; align-items: center; }
+
+  .response-name { font-size: 16px; font-weight: 600; }
+
+  .role-pill {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #fff;
+    border-radius: 12px;
+    padding: 3px 10px;
+    margin-left: 10px;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .response-meta { color: var(--muted); font-size: 13px; margin-top: 6px; }
+  .response-date { font-size: 12px; color: var(--muted); }
+
+  .answer-block {
+    margin-bottom: 18px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+
+  .answer-block:last-child { border-bottom: none; }
+
+  .answer-q { font-size: 14px; color: #ccc; margin-bottom: 6px; }
+  .answer-a { font-size: 15px; color: #eee; font-style: italic; line-height: 1.65; }
+  .answer-empty { color: var(--muted); font-style: italic; }
+
+  .done-icon { font-size: 52px; text-align: center; display: block; margin-bottom: 16px; }
+
+  .progress-bar {
+    height: 4px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+    margin-bottom: 28px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: var(--grad);
+    transition: width 0.4s ease;
+  }
+
+  footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 16px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.25);
+    border-top: 1px solid var(--border);
+  }
+
+  .empty-msg { color: var(--muted); font-size: 15px; padding: 20px 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>NEA Interview Survey</h1>
+  <p>A-Level Computer Science &middot; Flashcard Revision Tool</p>
+  <nav>
+    <button class="nav-btn active" id="nav-survey" onclick="showView('home')">Survey</button>
+    <button class="nav-btn" id="nav-admin" onclick="showView('admin-login')">Admin</button>
+  </nav>
+</header>
+
+<main id="main"></main>
+
+<footer>NEA Survey Tool &middot; Data stored locally &middot; For educational use only</footer>
+
+<script>
+// ── Data ──────────────────────────────────────────────────────────────────────
+
+const QUESTIONS = [
+  {
+    section: "How should flashcards work?",
+    color: "#5b8dee",
+    questions: [
+      { id: "q1", text: "What makes a good flashcard?" },
+      { id: "q2", text: "Should you be able to edit the flashcard?" },
+      { id: "q3", text: "Does the flashcard layout influence revision?" },
+      { id: "q4", text: "Should there be a smooth animation when going through the flashcards?" },
+      { id: "q5", text: "Should you be able to edit the flashcards?" },
+    ]
+  },
+  {
+    section: "How much do you normally revise?",
+    color: "#f59e0b",
+    questions: [
+      { id: "q6",  text: "Are flashcards useful revision?" },
+      { id: "q7",  text: "Do you prefer notes or flashcards?" },
+      { id: "q8",  text: "Is it time consuming to revise?" },
+      { id: "q9",  text: "Do you procrastinate when needing to revise?" },
+      { id: "q10", text: "Is it hard to understand textbooks?" },
+      { id: "q11", text: "Do you find revising boring?" },
+    ]
+  },
+  {
+    section: "What makes a program good?",
+    color: "#a855f7",
+    questions: [
+      { id: "q12", text: "Does the GUI and visuals affect a website?" },
+      { id: "q13", text: "Do you find websites more accessible than apps?" },
+      { id: "q14", text: "Should a website have sound effects?" },
+      { id: "q15", text: "Should it be simple enough to use without instructions?" },
+    ]
+  }
+];
+
+const ADMIN_PASSWORD = "nea2026";
+const STORAGE_KEY = "nea_survey_responses";
+
+function loadResponses() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); }
+  catch { return []; }
+}
+
+function saveResponse(entry) {
+  const all = loadResponses();
+  all.push(entry);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
+}
+
+// ── State ─────────────────────────────────────────────────────────────────────
+
+let state = {
+  view: "home",
+  step: 0,          // 0=intro, 1-3=sections
+  name: "",
+  role: "",
+  answers: {},
+  selectedResponse: null,
+};
+
+function setState(patch) {
+  Object.assign(state, patch);
+  render();
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+function showView(v) {
+  document.getElementById("nav-survey").classList.toggle("active", v !== "admin-login" && v !== "admin");
+  document.getElementById("nav-admin").classList.toggle("active", v === "admin-login" || v === "admin");
+  setState({ view: v, step: 0, name: "", role: "", answers: {}, selectedResponse: null });
+}
+
+function escape(str) {
+  return String(str)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;");
+}
+
+// ── Views ─────────────────────────────────────────────────────────────────────
+
+function viewHome() {
+  return `
+    <div class="card">
+      <span class="badge" style="background:#5b8dee">NEA Interview</span>
+      <h2>Welcome to the Survey</h2>
+      <p class="intro">You've been asked to answer a short set of questions as part of a Computer Science A-Level NEA project building a <strong>flashcard revision tool</strong>. Your honest answers will help shape the design.</p>
+      <p class="intro">It takes about <strong>5–10 minutes</strong> to complete.</p>
+      <div style="text-align:right">
+        <button class="btn-primary" onclick="setState({view:'survey',step:0})">Begin Survey →</button>
+      </div>
+    </div>`;
+}
+
+function viewSurveyIntro() {
+  const ok = state.name.trim() && state.role;
+  return `
+    <div class="card">
+      <span class="badge" style="background:#5b8dee">Step 1 of 4</span>
+      <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+      <h2>About You</h2>
+      <label class="field-label">Your name</label>
+      <input type="text" placeholder="e.g. Ms Smith" value="${escape(state.name)}"
+        oninput="state.name=this.value;renderBtn()" id="name-input" />
+      <label class="field-label">Your role</label>
+      <div class="role-row">
+        <button class="role-btn ${state.role==='Client'?'selected':''}" onclick="state.role='Client';renderBtn();renderRoles()">Client</button>
+        <button class="role-btn ${state.role==='Stakeholder'?'selected':''}" onclick="state.role='Stakeholder';renderBtn();renderRoles()">Stakeholder</button>
+      </div>
+      <div style="text-align:right">
+        <button class="btn-primary" id="next-btn" ${ok?'':'disabled'} onclick="setState({view:'survey',step:1})">Next →</button>
+      </div>
+    </div>`;
+}
+
+function viewSurveySection(stepIndex) {
+  const sec = QUESTIONS[stepIndex - 1];
+  const totalSteps = QUESTIONS.length + 1; // intro + 3 sections
+  const pct = Math.round((stepIndex / totalSteps) * 100);
+  const allAnswered = sec.questions.every(q => (state.answers[q.id] || "").trim());
+  const isLast = stepIndex === QUESTIONS.length;
+
+  const qHtml = sec.questions.map(q => `
+    <div class="q-block">
+      <p class="q-text">${escape(q.text)}</p>
+      <textarea rows="3" placeholder="Type your answer here…"
+        oninput="state.answers['${q.id}']=this.value;renderBtn()"
+        id="ans-${q.id}">${escape(state.answers[q.id] || "")}</textarea>
+    </div>`).join("");
+
+  return `
+    <div class="card">
+      <span class="badge" style="background:${sec.color}">Section ${stepIndex} of ${QUESTIONS.length}</span>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+      <h2 class="section-header" style="color:${sec.color};border-color:${sec.color}">${escape(sec.section)}</h2>
+      ${qHtml}
+      <div id="error-msg"></div>
+      <div class="btn-row">
+        <button class="btn-secondary" onclick="setState({view:'survey',step:${stepIndex-1}})">← Back</button>
+        ${isLast
+          ? `<button class="btn-primary" id="next-btn" ${allAnswered?'':'disabled'} onclick="submitSurvey()">Submit ✓</button>`
+          : `<button class="btn-primary" id="next-btn" ${allAnswered?'':'disabled'} onclick="setState({view:'survey',step:${stepIndex+1}})">Next →</button>`
+        }
+      </div>
+    </div>`;
+}
+
+function viewDone() {
+  return `
+    <div class="card" style="text-align:center">
+      <span class="done-icon">✅</span>
+      <h2>Thank you!</h2>
+      <p class="intro" style="margin-top:12px">Your response has been saved. The student will review your answers as part of their NEA interview evidence.</p>
+      <button class="btn-primary" onclick="showView('home')">Back to Home</button>
+    </div>`;
+}
+
+function viewAdminLogin() {
+  return `
+    <div class="card">
+      <span class="badge" style="background:#1a1a3e">Admin</span>
+      <h2>View Responses</h2>
+      <label class="field-label">Password</label>
+      <input type="password" id="pw-input" placeholder="Enter admin password"
+        onkeydown="if(event.key==='Enter')adminLogin()" />
+      <div id="pw-error" class="error"></div>
+      <div style="text-align:right">
+        <button class="btn-primary" onclick="adminLogin()">Login →</button>
+      </div>
+    </div>`;
+}
+
+function viewAdmin() {
+  const responses = loadResponses();
+  const listHtml = responses.length === 0
+    ? `<p class="empty-msg">No responses yet — share the page with your stakeholders!</p>`
+    : responses.slice().reverse().map((r, i) => {
+        const realIdx = responses.length - 1 - i;
+        const answered = Object.keys(r.answers).length;
+        const total = QUESTIONS.flatMap(s=>s.questions).length;
+        const roleColor = r.role === "Client" ? "#5b8dee" : "#a855f7";
+        return `<div class="response-card" onclick="setState({view:'admin-detail',selectedResponse:${realIdx}})">
+          <div class="response-top">
+            <div>
+              <span class="response-name">${escape(r.name)}</span>
+              <span class="role-pill" style="background:${roleColor}">${escape(r.role)}</span>
+            </div>
+            <span class="response-date">${new Date(r.submittedAt).toLocaleDateString('en-GB')}</span>
+          </div>
+          <p class="response-meta">${answered}/${total} questions answered &middot; Click to view →</p>
+        </div>`;
+      }).join("");
+
+  return `
+    <div class="card" style="max-width:700px">
+      <span class="badge" style="background:#1a1a3e">Admin Dashboard</span>
+      <h2>All Responses (${responses.length})</h2>
+      <div style="margin-top:20px">${listHtml}</div>
+    </div>`;
+}
+
+function viewAdminDetail() {
+  const r = loadResponses()[state.selectedResponse];
+  if (!r) return viewAdmin();
+
+  const sectionsHtml = QUESTIONS.map(sec => {
+    const qs = sec.questions.map(q => `
+      <div class="answer-block">
+        <p class="answer-q">${escape(q.text)}</p>
+        <p class="answer-a">${r.answers[q.id]
+          ? escape(r.answers[q.id])
+          : '<span class="answer-empty">No answer provided</span>'}</p>
+      </div>`).join("");
+    return `
+      <div style="margin-bottom:28px">
+        <h3 class="section-header" style="color:${sec.color};border-color:${sec.color}">${escape(sec.section)}</h3>
+        ${qs}
+      </div>`;
+  }).join("");
+
+  const roleColor = r.role === "Client" ? "#5b8dee" : "#a855f7";
+
+  return `
+    <div class="card" style="max-width:700px">
+      <button class="btn-secondary" style="margin-bottom:20px" onclick="setState({view:'admin'})">← Back to list</button>
+      <h2>${escape(r.name)} <span class="role-pill" style="background:${roleColor};font-size:12px">${escape(r.role)}</span></h2>
+      <p style="color:var(--muted);font-size:13px;margin:8px 0 28px">Submitted: ${new Date(r.submittedAt).toLocaleString('en-GB')}</p>
+      ${sectionsHtml}
+    </div>`;
+}
+
+// ── Render ────────────────────────────────────────────────────────────────────
+
+function render() {
+  const main = document.getElementById("main");
+  let html = "";
+
+  if (state.view === "home") html = viewHome();
+  else if (state.view === "survey" && state.step === 0) html = viewSurveyIntro();
+  else if (state.view === "survey" && state.step >= 1) html = viewSurveySection(state.step);
+  else if (state.view === "done") html = viewDone();
+  else if (state.view === "admin-login") html = viewAdminLogin();
+  else if (state.view === "admin") html = viewAdmin();
+  else if (state.view === "admin-detail") html = viewAdminDetail();
+
+  main.innerHTML = html;
+}
+
+// Small helpers to avoid full re-render on typing
+function renderBtn() {
+  const btn = document.getElementById("next-btn");
+  if (!btn) return;
+  if (state.view === "survey" && state.step === 0) {
+    btn.disabled = !(state.name.trim() && state.role);
+  } else if (state.view === "survey" && state.step >= 1) {
+    const sec = QUESTIONS[state.step - 1];
+    btn.disabled = !sec.questions.every(q => (state.answers[q.id] || "").trim());
+  }
+}
+
+function renderRoles() {
+  document.querySelectorAll(".role-btn").forEach((btn, i) => {
+    const roles = ["Client","Stakeholder"];
+    btn.classList.toggle("selected", state.role === roles[i]);
+  });
+}
+
+function submitSurvey() {
+  try {
+    saveResponse({
+      id: Date.now(),
+      name: state.name,
+      role: state.role,
+      answers: { ...state.answers },
+      submittedAt: new Date().toISOString(),
+    });
+    setState({ view: "done" });
+  } catch(e) {
+    const el = document.getElementById("error-msg");
+    if (el) el.textContent = "Error saving response. Please try again.";
+  }
+}
+
+function adminLogin() {
+  const pw = document.getElementById("pw-input").value;
+  if (pw === ADMIN_PASSWORD) {
+    setState({ view: "admin" });
+  } else {
+    document.getElementById("pw-error").textContent = "Incorrect password.";
+  }
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>
