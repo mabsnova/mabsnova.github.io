@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NEA Interview Survey</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d0d1a;
+    --card: rgba(255,255,255,0.05);
+    --border: rgba(255,255,255,0.12);
+    --text: #e8e8f0;
+    --muted: #9090aa;
+    --accent1: #5b8dee;
+    --accent2: #a855f7;
+    --accent3: #f59e0b;
+    --grad: linear-gradient(135deg, #5b8dee, #a855f7);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 20% 20%, rgba(91,141,238,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 60% at 80% 80%, rgba(168,85,247,0.10) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  header {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 36px 24px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(22px, 5vw, 32px);
+    background: var(--grad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 6px;
+  }
+
+  header p { color: var(--muted); font-size: 13px; font-style: italic; }
+
+  main {
+    flex: 1;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    padding: 36px 16px 60px;
+  }
+
+  .card {
+    background: var(--card);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 36px 32px;
+    width: 100%;
+    max-width: 640px;
+    box-shadow: 0 12px 48px rgba(0,0,0,0.5);
+    animation: fadeUp 0.4s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: #fff;
+    padding: 4px 13px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    margin-bottom: 14px;
+    color: #fff;
+  }
+
+  .intro {
+    color: #bbbbd0;
+    line-height: 1.75;
+    font-size: 15px;
+    margin-bottom: 22px;
+  }
+
+  label.field-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 7px;
+  }
+
+  input[type="text"], textarea {
+    width: 100%;
+    padding: 11px 15px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 9px;
+    color: #fff;
+    font-size: 15px;
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+    margin-bottom: 20px;
+  }
+
+  input:focus, textarea:focus { border-color: var(--accent1); }
+  textarea { resize: vertical; line-height: 1.6; }
+
+  .role-row { display: flex; gap: 12px; margin-bottom: 26px; }
+
+  .role-btn {
+    flex: 1;
+    padding: 11px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 9px;
+    color: #aaa;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+
+  .role-btn.selected {
+    background: rgba(91,141,238,0.2);
+    border-color: var(--accent1);
+    color: #fff;
+  }
+
+  .btn-primary {
+    padding: 13px 30px;
+    background: var(--grad);
+    border: none;
+    border-radius: 9px;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+
+  .btn-primary:hover { opacity: 0.9; }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .btn-secondary {
+    padding: 13px 22px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 9px;
+    color: #bbb;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .btn-secondary:hover { background: rgba(255,255,255,0.13); }
+
+  .btn-row { display: flex; gap: 12px; justify-content: flex-end; margin-top: 14px; }
+
+  .section-header {
+    border-bottom: 2px solid;
+    padding-bottom: 8px;
+    margin-bottom: 22px;
+    font-family: 'Playfair Display', serif;
+    font-size: 19px;
+  }
+
+  .q-block { margin-bottom: 24px; }
+  .q-text { font-size: 15px; color: #ddd; line-height: 1.55; margin-bottom: 9px; }
+
+  .error { color: #ff8a8a; font-size: 13px; margin-top: 10px; }
+
+  .progress-bar {
+    height: 4px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+    margin-bottom: 28px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: var(--grad);
+    transition: width 0.4s ease;
+  }
+
+  .done-icon { font-size: 52px; text-align: center; display: block; margin-bottom: 16px; }
+
+  .spinner {
+    display: inline-block;
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 16px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.25);
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>NEA Interview Survey</h1>
+  <p>A-Level Computer Science &middot; Flashcard Revision Tool</p>
+</header>
+
+<main id="main"></main>
+
+<footer>NEA Survey Tool &middot; For educational use only</footer>
+
+<script>
+const FORMSPREE = "https://formspree.io/f/xkoeovoj";
+
+const QUESTIONS = [
+  {
+    section: "How should flashcards work?",
+    color: "#5b8dee",
+    questions: [
+      { id: "q1",  text: "What makes a good flashcard?" },
+      { id: "q2",  text: "Should you be able to edit the flashcard?" },
+      { id: "q3",  text: "Does the flashcard layout influence revision?" },
+      { id: "q4",  text: "Should there be a smooth animation when going through the flashcards?" },
+      { id: "q5",  text: "Should you be able to edit the flashcards?" },
+    ]
+  },
+  {
+    section: "How much do you normally revise?",
+    color: "#f59e0b",
+    questions: [
+      { id: "q6",  text: "Are flashcards useful revision?" },
+      { id: "q7",  text: "Do you prefer notes or flashcards?" },
+      { id: "q8",  text: "Is it time consuming to revise?" },
+      { id: "q9",  text: "Do you procrastinate when needing to revise?" },
+      { id: "q10", text: "Is it hard to understand textbooks?" },
+      { id: "q11", text: "Do you find revising boring?" },
+    ]
+  },
+  {
+    section: "What makes a program good?",
+    color: "#a855f7",
+    questions: [
+      { id: "q12", text: "Does the GUI and visuals affect a website?" },
+      { id: "q13", text: "Do you find websites more accessible than apps?" },
+      { id: "q14", text: "Should a website have sound effects?" },
+      { id: "q15", text: "Should it be simple enough to use without instructions?" },
+    ]
+  }
+];
+
+let state = { view: "home", step: 0, name: "", role: "", answers: {}, submitting: false };
+
+function setState(patch) { Object.assign(state, patch); render(); }
+
+function esc(str) {
+  return String(str||"")
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+// ── Views ─────────────────────────────────────────────────────────────────────
+
+function viewHome() {
+  return `
+    <div class="card">
+      <span class="badge" style="background:#5b8dee">NEA Interview</span>
+      <h2>Welcome to the Survey</h2>
+      <p class="intro">You've been asked to answer a short set of questions as part of a Computer Science A-Level NEA project building a <strong>flashcard revision tool</strong>. Your honest answers will help shape the design.</p>
+      <p class="intro">It takes about <strong>5–10 minutes</strong> to complete.</p>
+      <div style="text-align:right">
+        <button class="btn-primary" onclick="setState({view:'survey',step:0})">Begin Survey →</button>
+      </div>
+    </div>`;
+}
+
+function viewIntro() {
+  const ok = state.name.trim() && state.role;
+  return `
+    <div class="card">
+      <span class="badge" style="background:#5b8dee">Step 1 of 4</span>
+      <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+      <h2>About You</h2>
+      <label class="field-label">Your name</label>
+      <input type="text" placeholder="e.g. Ms Smith" value="${esc(state.name)}"
+        oninput="state.name=this.value;refreshBtn()" id="name-inp" />
+      <label class="field-label">Your role</label>
+      <div class="role-row">
+        <button class="role-btn ${state.role==='Client'?'selected':''}"
+          onclick="state.role='Client';refreshRoles();refreshBtn()">Client</button>
+        <button class="role-btn ${state.role==='Stakeholder'?'selected':''}"
+          onclick="state.role='Stakeholder';refreshRoles();refreshBtn()">Stakeholder</button>
+      </div>
+      <div style="text-align:right">
+        <button class="btn-primary" id="next-btn" ${ok?'':'disabled'}
+          onclick="setState({view:'survey',step:1})">Next →</button>
+      </div>
+    </div>`;
+}
+
+function viewSection(s) {
+  const sec = QUESTIONS[s-1];
+  const pct = Math.round((s / (QUESTIONS.length+1)) * 100);
+  const complete = sec.questions.every(q=>(state.answers[q.id]||"").trim());
+  const isLast = s === QUESTIONS.length;
+
+  const qs = sec.questions.map(q=>`
+    <div class="q-block">
+      <p class="q-text">${esc(q.text)}</p>
+      <textarea rows="3" placeholder="Type your answer here…"
+        oninput="state.answers['${q.id}']=this.value;refreshBtn()"
+        id="a-${q.id}">${esc(state.answers[q.id]||"")}</textarea>
+    </div>`).join("");
+
+  return `
+    <div class="card">
+      <span class="badge" style="background:${sec.color}">Section ${s} of ${QUESTIONS.length}</span>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+      <h2 class="section-header" style="color:${sec.color};border-color:${sec.color}">${esc(sec.section)}</h2>
+      ${qs}
+      <div id="err-msg"></div>
+      <div class="btn-row">
+        <button class="btn-secondary" onclick="setState({view:'survey',step:${s-1}})">← Back</button>
+        ${isLast
+          ? `<button class="btn-primary" id="next-btn" ${complete&&!state.submitting?'':'disabled'}
+               onclick="submitSurvey()">${state.submitting?'<span class="spinner"></span>Submitting…':'Submit ✓'}</button>`
+          : `<button class="btn-primary" id="next-btn" ${complete?'':'disabled'}
+               onclick="setState({view:'survey',step:${s+1}})">Next →</button>`}
+      </div>
+    </div>`;
+}
+
+function viewDone() {
+  return `
+    <div class="card" style="text-align:center">
+      <span class="done-icon">✅</span>
+      <h2>Thank you!</h2>
+      <p class="intro" style="margin-top:12px">Your response has been submitted. The student will review your answers as part of their NEA interview evidence.</p>
+      <button class="btn-primary" onclick="setState({view:'home',step:0,name:'',role:'',answers:{}})">Back to Home</button>
+    </div>`;
+}
+
+function viewError() {
+  return `
+    <div class="card" style="text-align:center">
+      <span style="font-size:48px;display:block;margin-bottom:16px">⚠️</span>
+      <h2>Submission Failed</h2>
+      <p class="intro" style="margin-top:12px">Something went wrong sending your answers. Please check your internet connection and try again.</p>
+      <button class="btn-primary" onclick="setState({view:'survey',step:${QUESTIONS.length},submitting:false})">← Try Again</button>
+    </div>`;
+}
+
+// ── Logic ─────────────────────────────────────────────────────────────────────
+
+async function submitSurvey() {
+  setState({ submitting: true });
+
+  // Build a flat object for Formspree
+  const payload = {
+    _subject: `NEA Survey — ${state.name} (${state.role})`,
+    Name: state.name,
+    Role: state.role,
+    "Submitted at": new Date().toLocaleString('en-GB'),
+  };
+
+  QUESTIONS.forEach(sec => {
+    payload[`— ${sec.section} —`] = ""; // section divider label
+    sec.questions.forEach(q => {
+      payload[q.text] = state.answers[q.id] || "(no answer)";
+    });
+  });
+
+  try {
+    const res = await fetch(FORMSPREE, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (res.ok) {
+      setState({ view: "done", submitting: false });
+    } else {
+      setState({ view: "error", submitting: false });
+    }
+  } catch {
+    setState({ view: "error", submitting: false });
+  }
+}
+
+function render() {
+  const main = document.getElementById("main");
+  if      (state.view === "home")   main.innerHTML = viewHome();
+  else if (state.view === "survey" && state.step === 0) main.innerHTML = viewIntro();
+  else if (state.view === "survey") main.innerHTML = viewSection(state.step);
+  else if (state.view === "done")   main.innerHTML = viewDone();
+  else if (state.view === "error")  main.innerHTML = viewError();
+}
+
+function refreshBtn() {
+  const btn = document.getElementById("next-btn");
+  if (!btn) return;
+  if (state.step === 0) {
+    btn.disabled = !(state.name.trim() && state.role);
+  } else {
+    const sec = QUESTIONS[state.step-1];
+    btn.disabled = !sec.questions.every(q=>(state.answers[q.id]||"").trim());
+  }
+}
+
+function refreshRoles() {
+  const btns = document.querySelectorAll(".role-btn");
+  const roles = ["Client","Stakeholder"];
+  btns.forEach((b,i) => b.classList.toggle("selected", state.role===roles[i]));
+}
+
+render();
+</script>
+</body>
+</html>
